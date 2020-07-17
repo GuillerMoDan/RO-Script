@@ -1,0 +1,41 @@
+// Add a random enchant from player equip items
+prontera, 145, 230, 5	script	Clein	630,{
+	mes "[Clein]";
+	mes "Otro cliente!!";
+	mes "Dime que quieres encantar, y veamos si puedo ayudarte";
+	next;
+	setarray .@posName$[1],"Shoes","Garment","Armor","Weapon";
+	setarray .@pos[1],EQI_SHOES,EQI_GARMENT,EQI_ARMOR,EQI_HAND_R;
+	set .@menu$,"";
+	set .@total,0;
+	for( .@i = 1; .@i < getarraysize(.@pos); .@i++) {
+		if (getequipisequiped(.@pos[.@i])) {
+			set .@menu$, .@menu$+.@posName$[.@i]+" [^0055FF"+getequipname(.@pos[.@i])+"^000000]";
+			.@total++;
+		}
+		set .@menu$, .@menu$+":";
+	}
+	if (.@total == 0) {
+		mes "[Clein]";
+		mes "Debes equiparte algo primero :eyes";
+		close;
+	}
+	set @i, select(.@menu$);
+	// save selected equip information
+	set .@item,getequipid(.@pos[@i]);
+	set .@ref,getequiprefinerycnt(.@pos[@i]);
+	set .@card1,getequipcardid(.@pos[@i],0);
+	set .@card2,getequipcardid(.@pos[@i],1);
+	set .@card3,getequipcardid(.@pos[@i],2);
+	set .@card4,getequipcardid(.@pos[@i],3);
+	// continue dialog
+	mes "[Clein]";
+	mes "Item: [^0055FF"+ getequipname(.@pos[@i]) +"^000000]";
+	mes "Agregemos un enchant...";
+	setarray .@optId[0],RDMOPT_VAR_MAXSPAMOUNT;
+	setarray .@optVal[0],10;
+	setarray .@optParam[0],0;
+	delequip .@pos[@i];
+	getitem3 .@item,1,1,.@ref,0,.@card1,.@card2,.@card3,.@card4,.@optId,.@optVal,.@optParam;
+	close;
+}
