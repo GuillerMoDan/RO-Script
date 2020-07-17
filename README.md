@@ -1,3 +1,3 @@
 # RO-Script
 rAthena scripts:
-- clein.txt: add random enchant from equip
+**clein.txt**: add random enchant from equip
