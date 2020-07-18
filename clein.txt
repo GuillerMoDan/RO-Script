@@ -1,41 +1,200 @@
-// Add a random enchant from player equip items
+//
+// List of item and total enchants
+// GARMENT	ID	Total Enchant
+//	Muffler [1]	2504	2
+//	Manteau [1]	2506	2
+//	SHOES
+//	Shoes [1]	2404	2
+//	Sandals [1]	2402	2
+//	Boots [1]	2406	2
+//	ARMOR
+//	Coat [1]	2310	2
+//	Chain Mail [1]	2315	2
+//	ARMA
+//	Pike [4]	1408	3
+//	Chain [3]	1520	3
+//	Tsurugi [2]	1120	2
+//	Two-Handed Axe [2] 	1361	2
+//	Morning Star [2] 	1514	3
+//	Evil Bone Wand [0]  	1615	2
+//	Long Mace	1525	2
+//	Arc Wand [2]	1611	2
+//	Composite Bow [4]	1705	3
+//	Two-Handed Sword [2] 	1158	2
+//	Sword Mace [1]	1517 / 1516	4	* craft
+//	Stunner [2]	1532		* craft
+//	Violin [4]	1902	3
+//	Rope [4]	1951	2
+//
+// List of enchants
+// Garment				75%	Shoes
+//	Slot 1					Slot 1
+//	Effect	Min	Max	val		Effect	Min	Max	val
+//	AGI	1	4	3		AGI	1	4	3
+//	INT	1	4	3		INT	1	4	3
+//	DEX	1	4	3		DEX	1	4	3
+//	LUK	1	4	3		LUK	1	4	3
+//	STR	1	4	3		STR	1	4	3
+//	VIT	1	4	3		VIT	1	4	3
+//						HIT	10	30	23
+//	Slot 2					Slot 2
+//	Effect	Min	Max	Val		Effect	Min	Max	val
+//	MAXHP	100	300	225		MAX HP	100	300	225
+//	MAXSP	40	100	75		MAX SP	40	100	75
+//	ATK	10	20	15		ATK	10	20	15
+//	MATAK	10	20	15		MATAK	10	20	15
+//	DEF	10	50	38		DEF	10	50	38
+//	MDEF	5	15	11		MDEF	5	15	11
+//	R WATER	1	5	4		R WATER	1	5	4
+//	R EARTH	1	5	4		R EARTH	1	5	4
+//	R FIRE	1	5	4		R FIRE	1	5	4
+//	R WIND	1	5	4		R WIND	1	5	4
+//						CRIT	5	12	9
 prontera, 145, 230, 5	script	Clein	630,{
+function showEquips; function validEquip;
+
+	// Equip list variable list
+	setarray .posName$[1],"Shoes","Garment","Armor","Weapon";
+	setarray .pos[1],EQI_SHOES,EQI_GARMENT,EQI_ARMOR,EQI_HAND_R;
+	// Garment
+	setarray .garment[0],2504,2506;
+	setarray .garmentTEnchants[0],2,2;
+	set .garmentEnchants1s$,"STR + 3:AGI + 3:VIT + 3:INT + 3:DEX + 3:LUK + 3";
+	setArray .garmentEnchants1[1],RDMOPT_VAR_STRAMOUNT,RDMOPT_VAR_AGIAMOUNT,RDMOPT_VAR_VITAMOUNT,RDMOPT_VAR_INTAMOUNT,RDMOPT_VAR_DEXAMOUNT,RDMOPT_VAR_LUKAMOUNT;
+	setArray .garmentEnchants1v[1],3,3,3,3,3,3;
+	set .garmentEnchants2s$,"Max HP + 225:Max SP + 75:ATK + 15:MATK + 15%:DEF + 38:MDEF + 11";
+	setArray .garmentEnchants2[1],RDMOPT_VAR_MAXHPAMOUNT,RDMOPT_VAR_MAXSPAMOUNT,RDMOPT_VAR_ATKPERCENT,RDMOPT_VAR_MAGICATKPERCENT,RDMOPT_VAR_ITEMDEFPOWER,RDMOPT_VAR_MDEFPOWER;
+	setArray .garmentEnchants2v[1],225,75,15,15,38,11;
+	// Shoes
+	setarray .shoes[0],2404,2402,2406;
+	setarray .shoesTEnchant[0],2,2,2;
+	set .shoesEnchants1s$,"STR + 3:AGI + 3:VIT + 3:INT + 3:DEX + 3:LUK + 3:HIT + 23";
+	setArray .shoesEnchants1[1],RDMOPT_VAR_STRAMOUNT,RDMOPT_VAR_AGIAMOUNT,RDMOPT_VAR_VITAMOUNT,RDMOPT_VAR_INTAMOUNT,RDMOPT_VAR_DEXAMOUNT,RDMOPT_VAR_LUKAMOUNT,RDMOPT_VAR_HITSUCCESSVALUE;
+	setArray .shoesEnchants1v[1],3,3,3,3,3,3,23;
+	set .shoesEnchants2s$,"Max HP + 225:Max SP + 75:ATK + 15:MATK + 15%:DEF + 38:MDEF + 11:CRIT + 9";
+	setArray .shoesEnchants2[1],RDMOPT_VAR_MAXHPAMOUNT,RDMOPT_VAR_MAXSPAMOUNT,RDMOPT_VAR_ATKPERCENT,RDMOPT_VAR_MAGICATKPERCENT,RDMOPT_VAR_ITEMDEFPOWER,RDMOPT_VAR_MDEFPOWER,RDMOPT_VAR_CRITICALSUCCESSVALUE;
+	setArray .shoesEnchants2v[1],225,75,15,15,38,11,9;
+	// Armor
+	setarray .armor[0],2310,2315;
+	setarray .armorTEnchant[0],2,2;
+	//setArray .armorEnchants[0],;
+	// Weapons
+	setarray .weapon[0],1408,1520,1120,1361,1514,1615,1525,1611,1705,1158,1902,1951;
+	setarray .weaponTEnchant[0],3,3,2,2,3,2,2,2,3,2,3,2;
+	// Start script
 	mes "[Clein]";
 	mes "Otro cliente!!";
-	mes "Dime que quieres encantar, y veamos si puedo ayudarte";
-	next;
-	setarray .@posName$[1],"Shoes","Garment","Armor","Weapon";
-	setarray .@pos[1],EQI_SHOES,EQI_GARMENT,EQI_ARMOR,EQI_HAND_R;
-	set .@menu$,"";
+	mes "Dime que quieres encantar, y veamos si puedo ayudarte.";
+	set .@menu$,"Lista de equipos compatibles:";
 	set .@total,0;
-	for( .@i = 1; .@i < getarraysize(.@pos); .@i++) {
-		if (getequipisequiped(.@pos[.@i])) {
-			set .@menu$, .@menu$+.@posName$[.@i]+" [^0055FF"+getequipname(.@pos[.@i])+"^000000]";
+	for (.@i = 1; .@i < getarraysize(.pos); .@i++) {
+		if (getequipisequiped(.pos[.@i])) {
+			set .@menu$, .@menu$+.posName$[.@i]+" [^0055FF"+getequipname(.pos[.@i])+"^000000]";
 			.@total++;
 		}
 		set .@menu$, .@menu$+":";
 	}
 	if (.@total == 0) {
-		mes "[Clein]";
+		mes " ";
 		mes "Debes equiparte algo primero :eyes";
+	}
+	next;
+	set .@menu$, .@menu$+":";
+	set @i, select(.@menu$);
+	if (@i == 1) {
+		mes "[Clein]";
+		mes "GARMENTS:";
+		showEquips(.garment,.garmentTEnchants);
+		next;
+		mes "[Clein]";
+		mes "SHOES:";
+		showEquips(.shoes,.shoesTEnchant);
+		next;
+		mes "[Clein]";
+		mes "ARMOR:";
+		showEquips(.armor,.armorTEnchant);
+		next;
+		mes "[Clein]";
+		mes "WEAPON:";
+		showEquips(.weapon,.weaponTEnchant);
 		close;
 	}
-	set @i, select(.@menu$);
-	// save selected equip information
-	set .@item,getequipid(.@pos[@i]);
-	set .@ref,getequiprefinerycnt(.@pos[@i]);
-	set .@card1,getequipcardid(.@pos[@i],0);
-	set .@card2,getequipcardid(.@pos[@i],1);
-	set .@card3,getequipcardid(.@pos[@i],2);
-	set .@card4,getequipcardid(.@pos[@i],3);
-	// continue dialog
+	@i--;
+	// save actual information
+	set .@item,getequipid(.pos[@i]);
+	set .@ref,getequiprefinerycnt(.pos[@i]);
+	set .@card1,getequipcardid(.pos[@i],0);
+	set .@card2,getequipcardid(.pos[@i],1);
+	set .@card3,getequipcardid(.pos[@i],2);
+	set .@card4,getequipcardid(.pos[@i],3);
+	// continue dialog...
 	mes "[Clein]";
-	mes "Item: [^0055FF"+ getequipname(.@pos[@i]) +"^000000]";
-	mes "Agregemos un enchant...";
-	setarray .@optId[0],RDMOPT_VAR_MAXSPAMOUNT;
-	setarray .@optVal[0],10;
+	mes "Item: [^0055FF"+ getequipname(.pos[@i]) +"^000000]";
+	mes "Selecciona el enchant del [1] slot";
+	setArray .@enchantsId[0],0;
+	setArray .@enchantsVal[0],0;
+	// check valid item and prepare enchants...
+	switch (.pos[@i]) {
+		case EQI_GARMENT:
+			validEquip(.@item,.garment);
+			.@en = select(.garmentEnchants1s$);
+			.@enchantsId[0] = .garmentEnchants1[.@en];
+			.@enchantsVal[0] = .garmentEnchants1v[.@en];
+			mes "Selecciona el enchant del [2] slot";
+			.@en = select(.garmentEnchants2s$);
+			.@enchantsId[1] = .garmentEnchants2[.@en];
+			.@enchantsVal[1] = .garmentEnchants2v[.@en];
+			break;
+		case EQI_SHOES:
+			validEquip(.@item,.shoes);
+			.@en = select(.shoesEnchants1s$);
+			.@enchantsId[0] = .shoesEnchants1[.@en];
+			.@enchantsVal[0] = .shoesEnchants1v[.@en];
+			mes "Selecciona el enchant del [2] slot";
+			.@en = select(.shoesEnchants2s$);
+			.@enchantsId[1] = .shoesEnchants2[.@en];
+			.@enchantsVal[1] = .shoesEnchants2v[.@en];
+			break;
+		case EQI_ARMOR:
+			validEquip(.@item,.armor);
+			break;
+		case EQI_HAND_R:
+			validEquip(.@item,.weapon);
+			break;
+		default:
+			mes "[Clein]";
+			mes ":eyes...";
+			close;
+	}
 	setarray .@optParam[0],0;
-	delequip .@pos[@i];
-	getitem3 .@item,1,1,.@ref,0,.@card1,.@card2,.@card3,.@card4,.@optId,.@optVal,.@optParam;
+	delequip .pos[@i];
+	getitem3 .@item,1,1,.@ref,0,.@card1,.@card2,.@card3,.@card4,.@enchantsId,.@enchantsVal,.@optParam;
 	close;
+
+	// Show equip
+	function showEquips {
+		.@size = getarraysize(getarg(0));
+		copyarray .@type, getarg(0), .@size;
+		.@size = getarraysize(getarg(1));
+		copyarray .@enchant, getarg(0), .@size;
+		for (.@j = 0; .@j < getarraysize(.@type); .@j++) {
+			mes "[^0055FF"+ getitemname(.@type[.@j]) +"^000000] -> Enchants: "+ .@enchant[.@j];
+		}
+		return;
+	}
+
+	// Validate equip
+	function validEquip {
+		.@itemId = getarg(0);
+		.@size = getarraysize(getarg(1));
+		copyarray .@type, getarg(1), .@size;
+		for (.@j = 0; .@j < getarraysize(.@type); .@j++) {
+			if (.@itemId == .@type[.@j]) {
+				return;
+			}
+		}
+		mes "[Clein]";
+		mes "Este item no es compatible...";
+		close;
+	}
 }
